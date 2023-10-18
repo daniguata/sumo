@@ -1,3 +1,7 @@
+/* preguntas:
+1) como debe inicializar los sumos
+*/
+
 #include <QTRSensors.h>
 
 /*Pines Motor*/
@@ -75,6 +79,7 @@
 
   //para saber el tiempo de inicio
   long tiempo = 0;
+  long tiempo_accion = 100;
 
   /*para saber el modo en el que se encuentra
   */
@@ -82,6 +87,15 @@
 
   //para saber si andar o no (1 si / 0 no)
   int remoto = 0;
+
+  /*tipos de modos para esquibar un oponente*/
+  /*0 => disminuye la velocidad en el motor en el cual sintio la presencia*/
+  /*1 => para la velocidad en el motor en el cual sintio la presencia*/
+  /*2 => cambia el giro del motor en el cual se halla detectado presencia*/
+  /*3 => disminuye la velocidad en el motor en el cual sintio la presencia en reversa*/
+  /*4 => para la velocidad en el motor en el cual sintio la presencia en reversa*/
+  /*5 => cambia el giro del motor en el cual se halla detectado presencia en reversa*/
+  int esquiva=0;
 void setup()
 {
   Serial.begin(9600);
@@ -126,8 +140,9 @@ void setup()
     pinMode(modo2, INPUT);
     pinMode(modo3, INPUT);
 
-  // inicializar tiempo
+  // inicializar tiempos
     tiempo = millis();
+    tiempo_accion = millis();
 }
 
 /*FUNCIONES*/
@@ -153,62 +168,140 @@ void loop()
     case encendido:
       barrido_sensores();
       control();
+      tiempo = millis();
+      tiempo_accion = millis();
     break;
 
+//busqueda del sumo en la pista
     case busqueda:
       barrido_sensores();
       control();
       //si los sensores de piso estan en la sona limite del doyo
       if((sensores[4] < linea) || (sensores[5] < linea))
       {
+        tiempo_accion=millis();
         asignar(limite_pista);
         break;
       }
       //para mandar a atacar si detecta algo alfrente
       else if((sensores[2] == 0) || (sensores[1] == 0))
       {
+        tiempo_accion=millis();
         asignar(ataque);
         break;
       }
       //si detecta algo a los costados
       else if((sensores[0] == 0) || (sensores[3] == 0))
       {
+        tiempo_accion=millis();
         asignar(evacion);
         break;
       }
-      //movimiento en el doyon para bvuscar enemigo;
-      else
+      //movimiento en el doyon para bvuscar enemigo y espera de un segundo en caso de aber detectado algo;
+      else if(millis()-tiempo) < 1000))
       {
-      buscando();//terminar funcionde buscar
+        buscando();//terminar funcionde buscar
       }
     break;
+
+//ataca cuando cualquiera de los dos sensores esten en 1
     case ataque: 
+        tiempo_accion=millis();
         pelea();// tiene los modos de pelea
         asignar(busqueda);
     break;
+    
+//evade cuando cualquiera de los sensores de los lados esten en 1
     case evacion:
+        tiempo_accion=millis();
         esquivar();
         asignar(busqueda);
     break;
+
+//cuando cualquiera de los sensores de piso este en 1 se quita del camino y permanece medio segundo en esta accion
     case limite_pista:
+        tiempo_accion=millis();
         pista_limite();
     break;
+
+//apaga los motores con señal del modulo de inicio en 0
     case apagado:
       motores_off();
       asignar(encendido);
     break;
+    
   } 
 }
 
 void esquivar()
 {
-  if(sensores[0]==0)
+  switch(esquiba)
   {
-    motor_comtrolado(1, 0, 30, 1, 0, 255);
-  }
-  else if(sensores[3]==0)
-  {
-    motor_comtrolado(1, 0, 255, 1, 0, 30);
+    case 0:
+      //disminuye la velocidad en un motor para quedar defrente 
+      if(sensores[0]==0)
+      {
+        motor_comtrolado(1, 0, 30, 1, 0, 255);
+      }
+      else if(sensores[3]==0)
+      {
+        motor_comtrolado(1, 0, 255, 1, 0, 30);
+      }
+    break;
+    case 1:
+      //para la velocidad en un motor para quedar defrente 
+      if(sensores[0]==0)
+      {
+        motor_comtrolado(0, 0, 0, 1, 0, 255);
+      }
+      else if(sensores[3]==0)
+      {
+        motor_comtrolado(1, 0, 255, 0, 0, 0);
+      }
+    break;
+    case 2:
+      //gira la velocidad en un motor para quedar defrente 
+      if(sensores[0]==0)
+      {
+        motor_comtrolado(0, 1, 255, 1, 0, 255);
+      }
+      else if(sensores[3]==0)
+      {
+        motor_comtrolado(1, 0, 255, 0, 1, 255);
+      }
+    break;
+    case 3:
+      if(sensores[0]==0)
+      {
+        motor_comtrolado(0, 1, 30, 0, 1, 255);
+      }
+      else if(sensores[3]==0)
+      {
+        motor_comtrolado(0, 1, 255, 0, 1, 30);
+      }
+    break;
+    case 4:
+      //para la velocidad en un motor para quedar defrente 
+      if(sensores[0]==0)
+      {
+        motor_comtrolado(0, 0, 0, 0, 1, 255);
+      }
+      else if(sensores[3]==0)
+      {
+        motor_comtrolado(0, 1, 255, 0, 0, 0);
+      }
+    break;
+    case 5:
+      //gira la velocidad en un motor para quedar defrente 
+      if(sensores[0]==0)
+      {
+        motor_comtrolado(1, 0, 255, 0, 1, 255);
+      }
+      else if(sensores[3]==0)
+      {
+        motor_comtrolado(0, 1, 255, 1, 0, 255);
+      }
+    break;
   }
 }
 
