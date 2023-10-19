@@ -1,5 +1,7 @@
 /* preguntas:
-1) como debe inicializar los sumos
+1) como debe inicializar los sumos en el doyo?
+2) tiempo de espera minimo para empesar a buscar mientras espera activacion de los sensores?
+3) mejorar busqueda o poner mas casos y modos de busqueda?
 */
 
 #include <QTRSensors.h>
@@ -79,7 +81,8 @@
 
   //para saber el tiempo de inicio
   long tiempo = 0;
-  long tiempo_accion = 100;
+  long tiempo_accion = 0;
+
 
   /*para saber el modo en el que se encuentra
   */
@@ -91,11 +94,14 @@
   /*tipos de modos para esquibar un oponente*/
   /*0 => disminuye la velocidad en el motor en el cual sintio la presencia*/
   /*1 => para la velocidad en el motor en el cual sintio la presencia*/
-  /*2 => cambia el giro del motor en el cual se halla detectado presencia*/
-  /*3 => disminuye la velocidad en el motor en el cual sintio la presencia en reversa*/
-  /*4 => para la velocidad en el motor en el cual sintio la presencia en reversa*/
-  /*5 => cambia el giro del motor en el cual se halla detectado presencia en reversa*/
-  int esquiva=0;
+  /*2 => giro sobre su eje hacia el lado donde halla detectado algo*/
+  /*3 => si detecta algun lado qira hacia el otro a una velocidad constante*/
+  /*4 => si detecta algun lado qira hacia el otro en su eye*/
+  /*5 => si detecta algun lado para*/
+  /*6 => si detecta algun lado adelante*/
+  /*7 => si detecta algun lado atras*/
+  int esquiva = 2;
+
 void setup()
 {
   Serial.begin(9600);
@@ -198,7 +204,7 @@ void loop()
         break;
       }
       //movimiento en el doyon para bvuscar enemigo y espera de un segundo en caso de aber detectado algo;
-      else if(millis()-tiempo) < 1000))
+      else if((millis()-tiempo_accion) > 1000)
       {
         buscando();//terminar funcionde buscar
       }
@@ -233,21 +239,31 @@ void loop()
   } 
 }
 
+/*funcion para como va a reaccionar al sumo contricante por los lados*/
+  /*tipos de modos para esquibar al oponente*/
+    /*0 => disminuye la velocidad en el motor en el cual sintio la presencia*/
+    /*1 => para la velocidad en el motor en el cual sintio la presencia*/
+    /*2 => giro sobre su eje hacia el lado donde halla detectado algo*/
+    /*3 => si detecta algun lado qira hacia el otro a una velocidad constante*/
+    /*4 => si detecta algun lado qira hacia el otro en su eye*/
+    /*5 => si detecta algun lado para*/
+    /*6 => si detecta algun lado adelante*/
+    /*7 => si detecta algun lado atras*/
 void esquivar()
 {
-  switch(esquiba)
+  switch(esquiva)
   {
     case 0:
-      //disminuye la velocidad en un motor para quedar defrente 
       if(sensores[0]==0)
       {
-        motor_comtrolado(1, 0, 30, 1, 0, 255);
+        motor_comtrolado(1, 0, 50, 1, 0, 255);
       }
       else if(sensores[3]==0)
       {
-        motor_comtrolado(1, 0, 255, 1, 0, 30);
+        motor_comtrolado(1, 0, 255, 1, 0, 50);
       }
     break;
+
     case 1:
       //para la velocidad en un motor para quedar defrente 
       if(sensores[0]==0)
@@ -259,8 +275,8 @@ void esquivar()
         motor_comtrolado(1, 0, 255, 0, 0, 0);
       }
     break;
+
     case 2:
-      //gira la velocidad en un motor para quedar defrente 
       if(sensores[0]==0)
       {
         motor_comtrolado(0, 1, 255, 1, 0, 255);
@@ -270,31 +286,22 @@ void esquivar()
         motor_comtrolado(1, 0, 255, 0, 1, 255);
       }
     break;
+
     case 3:
       if(sensores[0]==0)
       {
-        motor_comtrolado(0, 1, 30, 0, 1, 255);
+        motor_comtrolado(1, 0, 255, 0, 1, 50);
       }
       else if(sensores[3]==0)
       {
-        motor_comtrolado(0, 1, 255, 0, 1, 30);
+        motor_comtrolado(0, 1, 50, 1, 0, 255);
       }
     break;
+
     case 4:
       //para la velocidad en un motor para quedar defrente 
       if(sensores[0]==0)
       {
-        motor_comtrolado(0, 0, 0, 0, 1, 255);
-      }
-      else if(sensores[3]==0)
-      {
-        motor_comtrolado(0, 1, 255, 0, 0, 0);
-      }
-    break;
-    case 5:
-      //gira la velocidad en un motor para quedar defrente 
-      if(sensores[0]==0)
-      {
         motor_comtrolado(1, 0, 255, 0, 1, 255);
       }
       else if(sensores[3]==0)
@@ -302,9 +309,22 @@ void esquivar()
         motor_comtrolado(0, 1, 255, 1, 0, 255);
       }
     break;
+
+    case 5:
+      motores_off();
+    break;
+
+    case 6:
+      motores_delante();
+    break;
+
+    case 7:
+      motores_atras();
+    break;
   }
 }
 
+/*tipos de pelea dependiendo de que caso se tenga, es cambiable desde la variable modo*/
 void pelea()
 {
   //modos();
@@ -372,6 +392,7 @@ void control()
 
 }
 
+/*movimientos del sumo cuando detecta limite de pista*/
 void pista_limite()
 {
   
@@ -404,6 +425,7 @@ void pista_limite()
   asignar(busqueda);
 }
 
+/*metodo de busqueda y movimiento que tiene*/
 void buscando()
 {
   if((millis()-tiempo) > 5000)
@@ -448,7 +470,7 @@ void motores_atras(int velocidad = 255)
     analogWrite(pinPWMB, velocidad);
 }
 
-/*permite que el robot gire sobre su eje asia la derecha*/
+/*permite que el robot gire sobre su eje asia la derecha a maxima velocidad por defecto*/
 void motores_der_eje(int velocidad = 255)
 {
   /* declaracion de pines de motor y susu valores iniciales*/
@@ -462,7 +484,7 @@ void motores_der_eje(int velocidad = 255)
     analogWrite(pinPWMB, velocidad);
 }
 
-/*permite que el robot gire sobre su eje asia la izquierda*/
+/*permite que el robot gire sobre su eje asia la izquierda a maxima velocidad por defecto*/
 void motores_izq_eje(int velocidad = 255)
 {
   /* declaracion de pines de motor y susu valores iniciales*/
@@ -476,7 +498,7 @@ void motores_izq_eje(int velocidad = 255)
     analogWrite(pinPWMB, velocidad);
 }
 
-/*apaga los motores para parar*/
+/*apaga los motores direccion y velocidad*/
 void motores_off()
 {
   /* declaracion de pines de motor y susu valores iniciales*/
@@ -491,6 +513,8 @@ void motores_off()
 }
 
 /*ENTRAN LOS PW PARA CADA MOTOR Y SU RESPECTIVA DIRACCION*/
+/*su orden es motor hacia delante, atras, y velocidad que tendra
+y en ese mismo orden primero el derecho y despues el izquierdo*/
 void motor_comtrolado(int AI1 = 1, int AI2 = 0, int PWA=255, int BI1 = 1, int BI2 = 0, int PWB=255)
 {
   /* declaracion de pines de motor y susu valores iniciales*/
@@ -504,14 +528,7 @@ void motor_comtrolado(int AI1 = 1, int AI2 = 0, int PWA=255, int BI1 = 1, int BI
     analogWrite(pinPWMB, PWB);
 }
 
-/*lee los sensores y los guarda en el arreglo global sensores:
-[0] lado derecho
-[1] frente derecho
-[2] frente izquierdo
-[3] lado izquierdo
-[4] piso derecho
-[5] piso izquierdo
-*/
+/*lee y guarda los valores que tengan los sensores en ese momento*/
 void barrido_sensores()
 {
   sp1.read(SP1);
@@ -527,6 +544,7 @@ void barrido_sensores()
   remoto = digitalRead(p1);
 }
 
+/*lee y cambia la variable modo de pendiendo de que interuptor este seleccionado*/
 void modos()
 {
   if(digitalRead(modo1) == 0)
