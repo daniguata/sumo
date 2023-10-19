@@ -395,10 +395,11 @@ void control()
 /*movimientos del sumo cuando detecta limite de pista*/
 void pista_limite()
 {
-  
   tiempo = millis();
   while((millis()-tiempo) < 500)
   { 
+    remoto = digitalRead(p1);
+    control();
     if((0 < sensores[4] < linea) && (linea < sensores[5]))
     {
       motor_comtrolado(0,1,255,0,1,100);
@@ -417,12 +418,10 @@ void pista_limite()
       remoto = digitalRead(p1);
       control();
     }
-
     barrido_sensores();
-    control();    
+    control();
   }
   tiempo = millis();
-  asignar(busqueda);
 }
 
 /*metodo de busqueda y movimiento que tiene*/
