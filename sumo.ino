@@ -79,9 +79,14 @@
   /*me sirve para saber el valor que tiene entre negro y blanco*/
   int linea = 500;
 
-  //para saber el tiempo de inicio
+  //para saber el tiempo que se demora en evitar linea
   long tiempo = 0;
+  //para saver cuanto tiempo tiene para hacer una accion
   long tiempo_accion = 0;
+  //caunto lleva en la misma accion para cambiar estrateguia
+  long tiempo_recurrencia;
+  //tiempo que tiene para quedarse en la ultima accion hecha
+  int demora = 2000;
 
 
   /*para saber el modo en el que se encuentra
@@ -148,6 +153,7 @@ void setup()
 
   // inicializar tiempos
     tiempo = millis();
+    tiempo_recurrencia = 0;
     tiempo_accion = millis();
 }
 
@@ -185,27 +191,36 @@ void loop()
       //si los sensores de piso estan en la sona limite del doyo
       if((sensores[4] < linea) || (sensores[5] < linea))
       {
-        tiempo_accion=millis();
+        demora=1000;
+        esquiva = 7;
+        tiempo_recurrencia = 0;
         asignar(limite_pista);
         break;
       }
       //para mandar a atacar si detecta algo alfrente
       else if((sensores[2] == 0) || (sensores[1] == 0))
       {
-        tiempo_accion=millis();
+        tiempo_recurrencia = 0;
+        esquiva = 2;
+        demora = 1000;
+        tiempo_accion = millis();
         asignar(ataque);
         break;
       }
       //si detecta algo a los costados
       else if((sensores[0] == 0) || (sensores[3] == 0))
       {
-        tiempo_accion=millis();
+        demora=1000;
+        tiempo_accion = millis();
+        //evita estar actualizando todo el tiempo
+        if(tiempo_recurrencia==0){tiempo_recurrencia = millis(); esquiva = 2;}
         asignar(evacion);
         break;
       }
       //movimiento en el doyon para bvuscar enemigo y espera de un segundo en caso de aber detectado algo;
-      else if((millis()-tiempo_accion) > 1000)
+      else if((millis() - tiempo_accion) > demora)
       {
+        demora=1000;
         buscando();//terminar funcionde buscar
       }
     break;
@@ -226,7 +241,6 @@ void loop()
 
 //cuando cualquiera de los sensores de piso este en 1 se quita del camino y permanece medio segundo en esta accion
     case limite_pista:
-        tiempo_accion=millis();
         pista_limite();
     break;
 
@@ -251,6 +265,24 @@ void loop()
     /*7 => si detecta algun lado atras*/
 void esquivar()
 {
+  if((millis() - tiempo_recurrencia) > 1500)
+  {
+    switch(esquiva)
+    {
+      case 2:
+        esquiva = 6;
+      break;
+
+      case 6:
+        esquiva = 7;
+      break;
+      
+      case 7:
+        esquiva = 2;
+      break;
+    }
+    tiempo_recurrencia = millis();
+  }
   switch(esquiva)
   {
     case 0:
@@ -339,12 +371,12 @@ void pelea()
     }
     else if(sensores[1] == 0)
     {
-      motor_comtrolado( 1, 0, 200,  1, 0, 255);
+      motor_comtrolado( 1, 0, 50,  1, 0, 255);
       break;
     }
     else if(sensores[2] == 0)
     {
-      motor_comtrolado( 1, 0, 255,  1, 0, 200);
+      motor_comtrolado( 1, 0, 255,  1, 0, 50);
       break;
     }
   break;
@@ -352,7 +384,7 @@ void pelea()
   case 1://choca con ambos sensores en 1
     if((sensores[1] == 0) && (sensores[2] == 0))
     {
-      motor_comtrolado( 1, 0, 200,  1, 0, 255);
+      motor_comtrolado( 1, 0, 50,  1, 0, 255);
       break;
     }
     else if(sensores[1] == 0)
