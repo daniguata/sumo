@@ -4,6 +4,10 @@
 3) mejorar busqueda o poner mas casos y modos de busqueda?
 */
 
+  /*para saber el modo en el que se encuentra
+  */
+  int modo = 0;
+
 #include <QTRSensors.h>
 
 /*Pines Motor*/
@@ -86,12 +90,7 @@
   //caunto lleva en la misma accion para cambiar estrateguia
   long tiempo_recurrencia;
   //tiempo que tiene para quedarse en la ultima accion hecha
-  int demora = 2000;
-
-
-  /*para saber el modo en el que se encuentra
-  */
-  int modo = 0;
+  int demora = 0;
 
   //para saber si andar o no (1 si / 0 no)
   int remoto = 0;
@@ -165,7 +164,7 @@ void setup()
   void motores_off();
   void motor_comtrolado(int AI1 = 1, int AI2 = 0, int PWA=255, int BI1 = 1, int BI2 = 0, int PWB=255);
   void barrido_sensores();
-  void modos();
+
   void buscando();
   void control();
   void pelea();
@@ -192,7 +191,7 @@ void loop()
       if((sensores[4] < linea) || (sensores[5] < linea))
       {
         demora=1000;
-        esquiva = 7;
+        esquiva = 2;
         tiempo_recurrencia = 0;
         asignar(limite_pista);
         break;
@@ -347,11 +346,11 @@ void esquivar()
     break;
 
     case 6:
-      motores_delante();
+      motores_delante(150);
     break;
 
     case 7:
-      motores_atras();
+      motores_atras(150);
     break;
   }
 }
@@ -573,25 +572,4 @@ void barrido_sensores()
   sensores[2] = digitalRead(s3);
   sensores[3] = digitalRead(s4);
   remoto = digitalRead(p1);
-}
-
-/*lee y cambia la variable modo de pendiendo de que interuptor este seleccionado*/
-void modos()
-{
-  if(digitalRead(modo1) == 0)
-  {
-    modo = 1;
-  }
-  else if(digitalRead(modo2) == 0)
-  {
-    modo = 2;
-  }
-  else if(digitalRead(modo3) == 0)
-  {
-    modo = 3;
-  }
-  else 
-  {
-    modo = 0;
-  }
 }
