@@ -12,13 +12,13 @@
 
 /*Pines Motor*/
   /*motor 1*/
-    const int pinAIN1 = 10;
-    const int pinAIN2 = 11;
-    const int pinPWMA = 5;
+    const int pinAIN1 = 8;
+    const int pinAIN2 = 7;
+    const int pinPWMA = 6;
   /*motor 2*/
-    const int pinBIN1 = 7;
-    const int pinBIN2 = 8;
-    const int pinPWMB = 6;
+    const int pinBIN1 = 11;
+    const int pinBIN2 = 10;
+    const int pinPWMB = 5;
 
 /* pines sensores S*/
   //1 no hay nada y 0 hay algo
@@ -569,7 +569,7 @@ void barrido_sensores()
 
   sensores[0] = digitalRead(s5);
   sensores[1] = digitalRead(s2);
-  sensores[2] = digitalRead(s3);
-  sensores[3] = digitalRead(s4);
+  sensores[2] = digitalRead(s1);
+  sensores[3] = digitalRead(s3);
   remoto = digitalRead(p1);
 }
