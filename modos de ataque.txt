@@ -20,7 +20,8 @@ modo 3(011)
 
 ---------------------- con bandera ---------------
 modo 4(100)
---manda al modo 0
+cfrente--> ataca igual a modo 0 y se pone la bandera en 90º
+lado -->igual a modo 0 y dependiendo de donde detecta pone la bandera a ese lado
 
 modo 5(101)
 --manda al modo 0
