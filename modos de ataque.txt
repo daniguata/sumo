@@ -1,0 +1,32 @@
+modo 0 (000)
+frente-->los sensores de adelante si detecta solo uno se gira asia el lado del sensor faltante 
+          asta que los dos sensores lean
+frente-->si los dos sensores leen ataca a toda velocidad
+lado-->los sensores de los lados giran asia el lado donde halla detectado el objeto para atacar
+        si permanece el sensor prendido por un segundo y medio cambia a un movimiento asia alfrente
+         y si sigue por el mismo tiempo se mueve hacia atras
+
+modo 1(001)
+frente-->el sensor de adelante si detecta con los dos sensores este se mueve hacia un lado para 
+        siempre atacar de lado
+atras--> modo 0
+
+modo 2(010)
+frente-->se mueve hacia un lado para esquivar el sumo contricante y lo mada a modo 1
+lado -->manda modo a modo 0
+
+modo 3(011)
+--manda al modo 0
+
+---------------------- con bandera ---------------
+modo 4(100)
+--manda al modo 0
+
+modo 5(101)
+--manda al modo 0
+
+modo 6(110)
+--manda al modo 0
+
+modo 7(111)
+--manda al modo 0
