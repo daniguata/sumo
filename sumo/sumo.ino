@@ -5,12 +5,16 @@
 */
 
 #include <QTRSensors.h>
+#include <Servo.h>
 #include "maquinaEstados.h"
 #include "motores.h"
 #include "sensores.h"
 #include "movimientos.h"
 #include "declaraciones.h"
+#include "bandera_motor.h"
 
+
+  Servo bandera;
   /*para saber el modo en el que se encuentra
   */
   int modo = 0;
@@ -75,6 +79,8 @@
   long tiempo_accion = 0;
   //caunto lleva en la misma accion para cambiar estrateguia
   long tiempo_recurrencia;
+
+  //long tiempo_bandera = 0;
   //tiempo que tiene para quedarse en la ultima accion hecha
   int demora = 0;
 
@@ -95,11 +101,14 @@
   //guarada los valores digitales de los interruptores
   int mod1=0,mod2=0,mod3=0;
 
+  char posicion_bandera = 1;
+
 void setup()
 {
   Serial.begin(9600);
   millis();
   declaracion();
+  bandera.attach(13);
   // inicializar tiempos
     tiempo = millis();
     tiempo_recurrencia = 0;
@@ -114,7 +123,7 @@ void loop()
     case encendido:
       barrido_sensores();
       control();
-      modos();
+      modos();Serial.println(modo);
       tiempo = millis();
       tiempo_accion = millis();
     break;

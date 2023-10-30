@@ -89,6 +89,7 @@ void modos() {
     mod3 = 1;
   }
   modo = ((mod3 * 1) + (mod2 * 2) + (mod1 * 4));
+  
 }
 
 #endif

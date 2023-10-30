@@ -185,11 +185,11 @@ void esquivar()
     case 4:
       if(sensores[0]==0)
       {
-        vandera_der();
+        bandera_der();
       }
       else if(sensores[3]==0)
       {
-        vandera_izq();
+        bandera_izq();
       }
     break;
 
@@ -397,18 +397,23 @@ void pelea()
       modo = 0;
     }
   break;
+
   case 3:
     modo=0;
   break;
+
   case 4:
-    
+    motores_off();
   break;
+
   case 5:
     modo=0;
   break;
+
   case 6:
     modo=0;
   break;
+
   case 7:
     modo=0;
   break;

@@ -1,10 +1,6 @@
 #ifndef declaraciones_h
 #define declaraciones_h
 
-#include <Servo.h>
-
-  Servo bandera;
-
 /*Pines Motor*/
   /*motor 1*/
     extern const int pinAIN1;
@@ -67,7 +63,7 @@ void declaracion(){
     //pinMode(s5, INPUT);
 
   /*servo motor*/
-    bandera.attach(s5);
+    //bandera.attach(s5);
 
   /*declaracion de SP*/
     //pinMode(sp1, INPUT);
