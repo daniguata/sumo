@@ -2,6 +2,7 @@
 #define movimientos_h
 
   #include "maquinaEstados.h"
+  #include "bandera_motor.h"
 
   /*para saber el modo en el que se encuentra
   */
@@ -48,38 +49,41 @@ void buscando()
   }
 }
 
-void desicion(){//si los sensores de piso estan en la sona limite del doyo
-      if((sensores[4] < linea) || (sensores[5] < linea))
-      {
-        demora=1000;
-        esquiva = 2;
-        tiempo_recurrencia = 0;
-        asignar(limite_pista);
-      }
-      //para mandar a atacar si detecta algo alfrente
-      else if((sensores[2] == 0) || (sensores[1] == 0))
-      {
-        tiempo_recurrencia = 0;
-        esquiva = 2;
-        demora = 1000;
-        tiempo_accion = millis();
-        asignar(ataque);
-      }
-      //si detecta algo a los costados
-      else if((sensores[0] == 0) || (sensores[3] == 0))
-      {
-        demora=1000;
-        tiempo_accion = millis();
-        //evita estar actualizando todo el tiempo
-        if(tiempo_recurrencia==0){tiempo_recurrencia = millis(); esquiva = 2;}
-        asignar(evacion);
-      }
-      //movimiento en el doyon para bvuscar enemigo y espera de un segundo en caso de aber detectado algo;
-      else if((millis() - tiempo_accion) > demora)
-      {
-        demora=1000;
-        buscando();//terminar funcionde buscar
-      }}
+void desicion()
+{
+  //si los sensores de piso estan en la sona limite del doyo
+  if((sensores[4] < linea) || (sensores[5] < linea))
+  {
+    demora=1000;
+    esquiva = 2;
+    tiempo_recurrencia = 0;
+    asignar(limite_pista);
+  }
+  //para mandar a atacar si detecta algo alfrente
+  else if((sensores[2] == 0) || (sensores[1] == 0))
+  {
+    tiempo_recurrencia = 0;
+    esquiva = 2;
+    demora = 1000;
+    tiempo_accion = millis();
+    asignar(ataque);
+  }
+  //si detecta algo a los costados
+  else if((sensores[0] == 0) || (sensores[3] == 0))
+  {
+    demora=1000;
+    tiempo_accion = millis();
+    //evita estar actualizando todo el tiempo
+    if(tiempo_recurrencia==0){tiempo_recurrencia = millis(); esquiva = 2;}
+    asignar(evacion);
+  }
+  //movimiento en el doyon para bvuscar enemigo y espera de un segundo en caso de aber detectado algo;
+  else if((millis() - tiempo_accion) > demora)
+  {
+    demora=1000;
+    buscando();//terminar funcionde buscar
+  }
+}
 
 /*pertenece a movimientos.h*/
 /*funcion para como va a reaccionar al sumo contricante por los lados*/
@@ -94,24 +98,164 @@ void desicion(){//si los sensores de piso estan en la sona limite del doyo
 /*7 => si detecta algun lado atras*/
 void esquivar()
 {
-  if((millis() - tiempo_recurrencia) > 1500)
+  switch(modo)
   {
-    switch(esquiva)
-    {
-      case 2:
-        esquiva = 6;
-      break;
+    case 0:
+      if((millis() - tiempo_recurrencia) > 1500)
+      {
+        switch(esquiva)
+        {
+          case 2:
+            esquiva = 6;
+          break;
 
-      case 6:
-        esquiva = 7;
-      break;
-      
-      case 7:
-        esquiva = 2;
-      break;
-    }
-    tiempo_recurrencia = millis();
+          case 6:
+            esquiva = 7;
+          break;
+          
+          case 7:
+            esquiva = 2;
+          break;
+        }
+        tiempo_recurrencia = millis();
+      }
+    break;
+    case 1:
+      if((millis() - tiempo_recurrencia) > 1500)
+      {
+        switch(esquiva)
+        {
+          case 2:
+            esquiva = 6;
+          break;
+
+          case 6:
+            esquiva = 7;
+          break;
+          
+          case 7:
+            esquiva = 2;
+          break;
+        }
+        tiempo_recurrencia = millis();
+      }
+    break;
+    case 2:
+    if((millis() - tiempo_recurrencia) > 1500)
+      {
+        switch(esquiva)
+        {
+          case 2:
+            esquiva = 6;
+          break;
+
+          case 6:
+            esquiva = 7;
+          break;
+          
+          case 7:
+            esquiva = 2;
+          break;
+        }
+        tiempo_recurrencia = millis();
+      }
+    modo = 0;
+    break;
+    case 3:
+    if((millis() - tiempo_recurrencia) > 1500)
+      {
+        switch(esquiva)
+        {
+          case 2:
+            esquiva = 6;
+          break;
+
+          case 6:
+            esquiva = 7;
+          break;
+          
+          case 7:
+            esquiva = 2;
+          break;
+        }
+        tiempo_recurrencia = millis();
+      }
+    break;
+
+    case 4:
+      if(sensores[0]==0)
+      {
+        vandera_der();
+      }
+      else if(sensores[3]==0)
+      {
+        vandera_izq();
+      }
+    break;
+
+    case 5:
+    if((millis() - tiempo_recurrencia) > 1500)
+      {
+        switch(esquiva)
+        {
+          case 2:
+            esquiva = 6;
+          break;
+
+          case 6:
+            esquiva = 7;
+          break;
+          
+          case 7:
+            esquiva = 2;
+          break;
+        }
+        tiempo_recurrencia = millis();
+      }
+    break;
+    case 6:
+    if((millis() - tiempo_recurrencia) > 1500)
+      {
+        switch(esquiva)
+        {
+          case 2:
+            esquiva = 6;
+          break;
+
+          case 6:
+            esquiva = 7;
+          break;
+          
+          case 7:
+            esquiva = 2;
+          break;
+        }
+        tiempo_recurrencia = millis();
+      }
+    break;
+    case 7:
+    if((millis() - tiempo_recurrencia) > 1500)
+      {
+        switch(esquiva)
+        {
+          case 2:
+            esquiva = 6;
+          break;
+
+          case 6:
+            esquiva = 7;
+          break;
+          
+          case 7:
+            esquiva = 2;
+          break;
+        }
+        tiempo_recurrencia = millis();
+      }
+    break;
   }
+  
+
   switch(esquiva)
   {
     case 0:
@@ -229,13 +373,35 @@ void pelea()
     }
   break;
   case 2:
-    modo=0;
+    if((sensores[1] == 0) && (sensores[2] == 0))
+    {
+      motor_comtrolado( 1, 0, 50,  1, 0, 255);
+      break;
+    }
+    else if(sensores[1] == 0)
+    {
+      motor_comtrolado( 1, 0, 255,  1, 0, 100);
+      break;
+    }
+    else if(sensores[2] == 0)
+    {
+      motor_comtrolado( 1, 0, 100,  1, 0, 255);
+      break;
+    }
+    else 
+    {
+      motores_delante(150);
+    }
+    if((millis() - tiempo_accion) > demora)
+    {
+      modo = 0;
+    }
   break;
   case 3:
     modo=0;
   break;
   case 4:
-    modo=0;
+    
   break;
   case 5:
     modo=0;

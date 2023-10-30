@@ -9,6 +9,7 @@
 #include "motores.h"
 #include "sensores.h"
 #include "movimientos.h"
+#include "declaraciones.h"
 
   /*para saber el modo en el que se encuentra
   */
@@ -98,46 +99,7 @@ void setup()
 {
   Serial.begin(9600);
   millis();
-  /* declaracion de pines de motor y susu valores iniciales*/
-      /*motor 1*/
-      pinMode(pinAIN2, OUTPUT);
-      pinMode(pinAIN1, OUTPUT);
-      pinMode(pinPWMA, OUTPUT);
-      digitalWrite(pinAIN1, LOW);
-      digitalWrite(pinAIN2, LOW);
-      analogWrite(pinPWMA, LOW);
-      /*motor 2*/
-      pinMode(pinBIN1, OUTPUT);
-      pinMode(pinBIN2, OUTPUT);
-      pinMode(pinPWMB, OUTPUT);
-      digitalWrite(pinBIN1, LOW);
-      digitalWrite(pinBIN2, LOW);
-      analogWrite(pinPWMB, LOW);
-  
-  /*declaracion de sensores*/
-    pinMode(s1, INPUT);
-    pinMode(s2, INPUT);
-    pinMode(s3, INPUT);
-    pinMode(s4, INPUT);
-    pinMode(s5, INPUT);
-
-  /*declaracion de SP*/
-    //pinMode(sp1, INPUT);
-    //pinMode(sp2, INPUT);
-    int Pinps1[] = {12}; // Ajusta el pin según tu configuración.
-    sp1.init((unsigned char*)Pinps1, 2);
-    int Pinps2[] = {2}; // Ajusta el pin según tu configuración.
-    sp2.init((unsigned char*)Pinps2, 2);
-
-  /*declaracion de demas*/
-    pinMode(AUX, INPUT);
-    pinMode(p1, INPUT);
-
-  /*declaracion de interructores*/
-    pinMode(inter1, INPUT);
-    pinMode(inter2, INPUT);
-    pinMode(inter3, INPUT);
-
+  declaracion();
   // inicializar tiempos
     tiempo = millis();
     tiempo_recurrencia = 0;
