@@ -101,14 +101,15 @@
   //guarada los valores digitales de los interruptores
   int mod1=0,mod2=0,mod3=0;
 
-  char posicion_bandera = 1;
+  char posicion_bandera = 3;
 
 void setup()
 {
   Serial.begin(9600);
   millis();
   declaracion();
-  bandera.attach(13);
+  //bandera.attach(s5);
+
   // inicializar tiempos
     tiempo = millis();
     tiempo_recurrencia = 0;
@@ -121,9 +122,10 @@ void loop()
   {
     //para empesar el codigo con el control
     case encendido:
+      bandera_posicion_inicial();
       barrido_sensores();
       control();
-      modos();Serial.println(modo);
+      modos();
       tiempo = millis();
       tiempo_accion = millis();
     break;

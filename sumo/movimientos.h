@@ -183,13 +183,25 @@ void esquivar()
     break;
 
     case 4:
-      if(sensores[0]==0)
+    bandera_der();
+    bandera_izq();
+    if((millis() - tiempo_recurrencia) > 1500)
       {
-        bandera_der();
-      }
-      else if(sensores[3]==0)
-      {
-        bandera_izq();
+        switch(esquiva)
+        {
+          case 2:
+            esquiva = 6;
+          break;
+
+          case 6:
+            esquiva = 7;
+          break;
+          
+          case 7:
+            esquiva = 2;
+          break;
+        }
+        tiempo_recurrencia = millis();
       }
     break;
 
@@ -403,7 +415,31 @@ void pelea()
   break;
 
   case 4:
-    motores_off();
+    bandera_posicion_inicial();
+    
+    if((sensores[1] == 0) && (sensores[2] == 0))
+    {
+      motor_comtrolado( 1, 0, 50,  1, 0, 255);
+      break;
+    }
+    else if(sensores[1] == 0)
+    {
+      motor_comtrolado( 1, 0, 255,  1, 0, 100);
+      break;
+    }
+    else if(sensores[2] == 0)
+    {
+      motor_comtrolado( 1, 0, 100,  1, 0, 255);
+      break;
+    }
+    else 
+    {
+      motores_delante(150);
+    }
+    if((millis() - tiempo_accion) > demora)
+    {
+      modo = 0;
+    }
   break;
 
   case 5:

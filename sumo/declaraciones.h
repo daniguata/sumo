@@ -60,7 +60,7 @@ void declaracion(){
     pinMode(s2, INPUT);
     pinMode(s3, INPUT);
     pinMode(s4, INPUT);
-    //pinMode(s5, INPUT);
+    pinMode(s5, OUTPUT);
 
   /*servo motor*/
     //bandera.attach(s5);
