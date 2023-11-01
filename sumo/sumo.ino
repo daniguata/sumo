@@ -1,6 +1,6 @@
 /* preguntas:
-1) como debe inicializar los sumos en el doyo?
-2) tiempo de espera minimo para empesar a buscar mientras espera activacion de los sensores?
+1) como debe inicializar los sumos en el dojo?
+2) tiempo de espera minimo para empezar a buscar mientras espera activacion de los sensores?
 3) mejorar busqueda o poner mas casos y modos de busqueda?
 */
 
@@ -101,7 +101,7 @@
   //guarada los valores digitales de los interruptores
   int mod1=0,mod2=0,mod3=0;
 
-  char posicion_bandera = 3;
+  char posicion_bandera = 3, cha = 1;
 
 void setup()
 {
@@ -135,6 +135,7 @@ void loop()
       barrido_sensores();
       control();
       desicion();
+      if(posicion_bandera == 1 && modo ==5 && cha == 1){bandera_izq(); cha = 0;}
     break;
 
 //ataca cuando cualquiera de los dos sensores esten en 1
