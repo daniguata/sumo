@@ -136,6 +136,7 @@ void loop()
       control();
       desicion();
       if(posicion_bandera == 1 && modo ==5 && cha == 1){bandera_izq(); cha = 0;}
+      if(posicion_bandera == 1 && modo ==6 && cha == 1){bandera_der(); cha = 0;}
     break;
 
 //ataca cuando cualquiera de los dos sensores esten en 1

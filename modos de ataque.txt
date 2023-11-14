@@ -24,9 +24,11 @@ cfrente--> ataca igual a modo 0 y se pone la bandera en 90º
 lado -->igual a modo 0 y dependiendo de donde detecta pone la bandera a ese lado
 
 modo 5(101)
+inicia la bandera al lado izquierdo
 --manda al modo 0
 
 modo 6(110)
+inicia la bandera al lado derecho
 --manda al modo 0
 
 modo 7(111)

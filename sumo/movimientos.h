@@ -471,7 +471,28 @@ void pelea()
   break;
 
   case 6:
-    modo=0;
+    if((sensores[1] == 0) && (sensores[2] == 0))
+    {
+      //bandera_posicion_inicial();
+      motor_comtrolado( 1, 0, 50,  1, 0, 255);
+      break;
+    }
+    else if(sensores[1] == 0)
+    {
+      bandera_der();
+      motor_comtrolado( 1, 0, 255,  1, 0, 100);
+      break;
+    }
+    else if(sensores[2] == 0)
+    {
+      bandera_izq();
+      motor_comtrolado( 1, 0, 100,  1, 0, 255);
+      break;
+    }
+    else 
+    {
+      motores_delante(150);
+    }
   break;
 
   case 7:
